@@ -9,10 +9,11 @@ jobs:
     name: Delete image from ghcr.io
     runs-on: ubuntu-latest
     steps:
-      - name: Delete image
-        uses: bots-house/ghcr-delete-image-action@v1.0.0
+      - name: Prune
+        uses: vlaurin/action-ghcr-prune@main
         with:
-          owner: ${{ github.repository_owner }}
-          name: ${{ github.event.repository.name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: pr-${{github.event.pull_request.number}}
+          token: ${{ secrets.PACKAGES_TOKEN }}
+          organization: ${{ github.repository_owner }}
+          container: ${{ github.event.repository.name }}
+          dry-run: false
+          tag-regex: pr-${{github.event.pull_request.number}}
