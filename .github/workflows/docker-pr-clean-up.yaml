@@ -16,4 +16,3 @@ jobs:
           name: ${{ github.event.repository.name }}
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: pr-${{github.event.pull_request.number}}
-          ignore-missing-package: true
