@@ -60,12 +60,17 @@ class UserController {
 
     const data = request.only(['firstname', 'lastname', 'email', 'password']);
 
+    const hashedPassword = crypto
+      .createHash('sha256')
+      .update(data.password)
+      .digest('base64');
+
     // Create user in DB
     let user;
     try {
       user = await User.create({
         email: data.email,
-        password: data.password,
+        password: hashedPassword,
         username: data.firstname,
         lastname: data.lastname,
       });

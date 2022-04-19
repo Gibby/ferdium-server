@@ -118,6 +118,9 @@ Route.get('new', ({ response, view }) => {
 Route.post('import', 'UserController.import');
 Route.get('import', ({ view }) => view.render('others.import'));
 
+Route.post('signup', 'UserController.signup');
+Route.get('signup', ({ view }) => view.render('others.signup'));
+
 // Legal documents
 Route.get('terms', ({ response }) => response.redirect('/terms.html'));
 Route.get('privacy', ({ response }) => response.redirect('/privacy.html'));
