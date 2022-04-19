@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Gibby/ferdium-server/compare/v1.0.0...v1.1.0) (2022-04-19)
+
+
+### Features
+
+* Add sign-up page ([#5](https://github.com/Gibby/ferdium-server/issues/5)) ([ba49d82](https://github.com/Gibby/ferdium-server/commit/ba49d8215eb249a61dd855723f5da4a5d6240bb9))
+
 ## 1.0.0 (2022-04-16)
 
 
