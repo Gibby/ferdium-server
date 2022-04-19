@@ -22,13 +22,21 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
+          flavor: |
+            latest=auto
           # list of Docker images to use as base name for tags
           images: |
+            ${{ github.repository }}
             ghcr.io/${{ github.repository }}
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
+            type=ref,event=pr
             type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -43,6 +51,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
         name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -51,6 +65,13 @@ jobs:
           # If needed, we can add more platforms when requested.
           platforms: "linux/amd64"
           # Push pull requests so they can be tested
-          #push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      -
+        name: Update repo description
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
