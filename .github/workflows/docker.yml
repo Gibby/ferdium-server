@@ -63,7 +63,9 @@ jobs:
           # If needed, we can add more platforms when requested.
           platforms: "linux/amd64"
           # Do not push pull requests
-          push: ${{ github.event_name != 'pull_request' }}
+          #push: ${{ github.event_name != 'pull_request' }}
+          # Push pull requests for testing
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       -
