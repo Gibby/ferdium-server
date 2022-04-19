@@ -2,8 +2,6 @@ name: Docker Build and Publish
 
 on:
   push:
-    branches:
-      - 'main'
     tags:
       - 'v*'
   pull_request:
@@ -30,14 +28,11 @@ jobs:
             ghcr.io/${{ github.repository }}
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
-      -
+2      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       -
@@ -64,8 +59,8 @@ jobs:
           # Due to build time, only building the one currently needed.
           # If needed, we can add more platforms when requested.
           platforms: "linux/amd64"
-          # Push pull requests so they can be tested
-          push: true
+          # Do not push pull requests
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       -
